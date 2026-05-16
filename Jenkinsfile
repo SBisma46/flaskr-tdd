@@ -4,7 +4,7 @@ pipeline {
         stage('Code Build') {
             steps {
                 echo 'Installing dependencies...'
-                sh '/usr/bin/pip3 install -r requirements.txt'
+                sh '/usr/bin/pip3 install -r requirements.txt --break-system-packages'
                 sh '/usr/bin/python3 create_db.py'
                 echo 'Build complete!'
             }

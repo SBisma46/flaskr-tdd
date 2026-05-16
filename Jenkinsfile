@@ -6,9 +6,9 @@ pipeline {
         stage('Code Build') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'pip install -r requirements.txt'
+                sh 'pip3 install -r requirements.txt'
                 echo 'Initializing database...'
-                sh 'python create_db.py'
+                sh 'python3 create_db.py'
                 echo 'Build complete!'
             }
         }
@@ -16,7 +16,7 @@ pipeline {
         stage('Unit Testing') {
             steps {
                 echo 'Running unit tests...'
-                sh 'python -m pytest tests/ -v'
+                sh 'python3 -m pytest tests/ -v'
                 echo 'Unit tests passed!'
             }
         }
@@ -25,16 +25,12 @@ pipeline {
             steps {
                 echo 'Building Docker image for the app...'
                 sh 'docker build -t flaskr-app:latest .'
-
                 echo 'Stopping any old container...'
                 sh 'docker rm -f flaskr-container || true'
-
                 echo 'Starting the app container...'
                 sh 'docker run -d --name flaskr-container -p 5000:5000 flaskr-app:latest'
-
                 echo 'Waiting for app to start...'
                 sh 'sleep 5'
-
                 echo 'App deployed successfully!'
             }
         }
@@ -43,10 +39,8 @@ pipeline {
             steps {
                 echo 'Building Selenium test Docker image...'
                 sh 'docker build -t flaskr-selenium ./selenium_tests'
-
                 echo 'Running Selenium tests inside container...'
                 sh 'docker run --rm --network container:flaskr-container flaskr-selenium'
-
                 echo 'Selenium tests passed!'
             }
         }
